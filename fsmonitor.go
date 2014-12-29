@@ -1,7 +1,7 @@
 package fsmonitor
 
 import (
-	"github.com/howeyc/fsnotify"
+	"github.com/go-fsnotify/fsnotify"
 	"os"
 	"path/filepath"
 )
