@@ -1,13 +1,13 @@
 package fsmonitor
 
 import (
-	"github.com/go-fsnotify/fsnotify"
+	"golang.org/x/exp/fsnotify"
 	"os"
 	"path/filepath"
 )
 
 func NewWatcher() (*Watcher, error) {
-	watcher, err := inotify.NewWatcher()
+	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
 		return nil, err
 	}
@@ -16,7 +16,7 @@ func NewWatcher() (*Watcher, error) {
 }
 
 func NewWatcherWithSkipFolders(skipFolders []string) (*Watcher, error) {
-	watcher, err := inotify.NewWatcher()
+	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
 		return nil, err
 	}
@@ -24,8 +24,8 @@ func NewWatcherWithSkipFolders(skipFolders []string) (*Watcher, error) {
 	return monitorWatcher, nil
 }
 
-func initWatcher(watcher *inotify.Watcher, skipFolders []string) *Watcher {
-	event := make(chan *inotify.Event)
+func initWatcher(watcher *fsnotify.Watcher, skipFolders []string) *Watcher {
+	event := make(chan *fsnotify.FileEvent)
 	watcherError := make(chan error)
 	monitorWatcher := &Watcher{Event: event, Error: watcherError, watcher: watcher, SkipFolders: skipFolders}
 	go func() {
@@ -57,10 +57,10 @@ func initWatcher(watcher *inotify.Watcher, skipFolders []string) *Watcher {
 }
 
 type Watcher struct {
-	Event       chan *inotify.Event
+	Event       chan *fsnotify.FileEvent
 	Error       chan error
 	SkipFolders []string
-	watcher     *inotify.Watcher
+	watcher     *fsnotify.Watcher
 }
 
 func (self *Watcher) Watch(path string) error {
