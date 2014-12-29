@@ -25,7 +25,7 @@ func NewWatcherWithSkipFolders(skipFolders []string) (*Watcher, error) {
 }
 
 func initWatcher(watcher *fsnotify.Watcher, skipFolders []string) *Watcher {
-	event := make(chan *fsnotify.FileEvent)
+	event := make(chan *fsnotify.Event)
 	watcherError := make(chan error)
 	monitorWatcher := &Watcher{Event: event, Error: watcherError, watcher: watcher, SkipFolders: skipFolders}
 	go func() {
@@ -57,7 +57,7 @@ func initWatcher(watcher *fsnotify.Watcher, skipFolders []string) *Watcher {
 }
 
 type Watcher struct {
-	Event       chan *fsnotify.FileEvent
+	Event       chan *fsnotify.Event
 	Error       chan error
 	SkipFolders []string
 	watcher     *fsnotify.Watcher
